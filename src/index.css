@@ -11,3 +11,26 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+*,
+:before,
+:after{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+a, a:link, a:visited, a:hover  {
+  text-decoration: none;
+}
+
+ul, ul li {
+  list-style: none;
+}
+
+/*@media screen and (max-width: 320px) {*/
+/*  body {*/
+/*    min-width: 320px;*/
+/*    width: 100%;*/
+/*  }*/
+/*}*/

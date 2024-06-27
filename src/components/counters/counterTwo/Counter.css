@@ -41,7 +41,7 @@
 .btnWrap {
     display: flex;
     justify-content: center;
-    padding: 50px;
+    align-items: center;
     border: #63DBFD solid 5px;
     gap: 50px;
 }
