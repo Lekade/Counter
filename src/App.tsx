@@ -2,6 +2,7 @@ import React, {useRef, useState} from 'react';
 import './App.css';
 import {CounterTwo} from "./components/counters/counterTwo/CounterTwo";
 import CounterApp from "./components/counters/counter/CounterApp";
+import CounterAppThree from "./components/counters/counterThree/CounterAppThree";
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
     return (
         <>
             <CounterApp/>
+            <CounterAppThree/>
             {/*<div className={'wrapperTwo'}>*/}
             {/*    <CounterTwo  counter={counterTwo} maxValue={maxValue.current} setCounter={changeCounterTwo} resetCounter={resetCounterTwo}/>*/}
             {/*</div>*/}

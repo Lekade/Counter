@@ -33,7 +33,7 @@ export const Display = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 100%;
-  height: 300px;
+  min-height: 300px;
   background-color: transparent;
   border: ${Theme.colors.primary} solid 5px;
   margin-bottom: 20px;
