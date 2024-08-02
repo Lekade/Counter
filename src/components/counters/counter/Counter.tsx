@@ -10,8 +10,8 @@ type CounterPropsType = {
     maxValue: number
     setCounter: () => void
     resetCounter: () => void
-    enableChangingSettings: boolean
-    errorChangingSettings: boolean
+    enabledSettingsMod: boolean
+    appError: boolean
 }
 
 export const Counter = ({
@@ -20,20 +20,20 @@ export const Counter = ({
                             resetCounter,
                             startValue,
                             maxValue,
-                            enableChangingSettings,
-                            errorChangingSettings
+                            enabledSettingsMod,
+                            appError
                         }: CounterPropsType) => {
     const color: ColorType = counter < maxValue ? Theme.colors.primary : Theme.colors.error
-    const disabledInc = counter > maxValue - 1 || enableChangingSettings
-    const disabledReset = counter === startValue || enableChangingSettings
+    const disabledInc = counter > maxValue - 1 || enabledSettingsMod
+    const disabledReset = counter === startValue || enabledSettingsMod
 
     return (
         <StyledCounter>
             <Display>
                 {
-                    enableChangingSettings
+                    enabledSettingsMod
                         ? <SettingsInfo>
-                            {errorChangingSettings
+                            {appError
                                 ? <ErrorInfo>Incorrect value!</ErrorInfo>
                                 : <span>enter values and press 'set'</span>
                             }

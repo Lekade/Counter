@@ -7,8 +7,8 @@ type DataType = {
     startValue : number
     maxValue: number
     data: number
-    enableChangingSettings: boolean
-    errorChangingSettings: boolean
+    enabledSettingsMod: boolean
+    appError: boolean
 }
 
 const CounterApp = () => {
@@ -16,8 +16,8 @@ const CounterApp = () => {
         startValue : 0,
         maxValue: 5,
         data: 0,
-        enableChangingSettings: false,
-        errorChangingSettings: false
+        enabledSettingsMod: false,
+        appError: false
     }
     const [counter, setCounter] = useState<DataType>(counterData)
 
@@ -44,8 +44,11 @@ const CounterApp = () => {
         localStorage.setItem('startValue', JSON.stringify(startValue))
         localStorage.setItem('maxValue', JSON.stringify(maxValue))
     }
-    const onOffSettings = (onOff: boolean, params: string) => {
-        setCounter(prevState =>({...prevState, [params] : onOff}))
+    const onOffSettings = (enabledSettingsMod: boolean) => {
+        setCounter(prevState =>({...prevState, enabledSettingsMod}))
+    }
+    const appErrorHandler = (appError: boolean) => {
+        setCounter(prevState =>({...prevState, appError}))
     }
     return (
         <Wrapper>
@@ -53,9 +56,10 @@ const CounterApp = () => {
                 startValue={counter.startValue}
                 maxValue={counter.maxValue}
                 changeSettings={changeSettings}
-                enableChangingSettings={counter.enableChangingSettings}
-                errorChangingSettings={counter.errorChangingSettings}
+                enabledSettingsMod={counter.enabledSettingsMod}
+                appError={counter.appError}
                 onOffSettings={onOffSettings}
+                appErrorHandler={appErrorHandler}
             />
             <Counter
                 counter={counter.data}
@@ -63,8 +67,8 @@ const CounterApp = () => {
                 maxValue={counter.maxValue}
                 setCounter={changeCounter}
                 resetCounter={resetCounter}
-                enableChangingSettings={counter.enableChangingSettings}
-                errorChangingSettings={counter.errorChangingSettings}
+                enabledSettingsMod={counter.enabledSettingsMod}
+                appError={counter.appError}
             />
         </Wrapper>
     );
