@@ -7,44 +7,42 @@ type SettingsType = {
     startValue: number
     maxValue: number
     changeSettings: (maxValue: number, startValue: number) => void
-    enableChangingSettings: boolean
-    errorChangingSettings: boolean
-    onOffSettings: (onOff: boolean, params: string) => void
+    onOffSettingsMod: (enabledSettingsMod: boolean) => void
 }
-type SettingType = 'startValue' | 'maxValue'
 
-const SettingsThree = ({startValue, maxValue, changeSettings, enableChangingSettings, errorChangingSettings, onOffSettings}: SettingsType) => {
-
+const SettingsThree = ({startValue, maxValue, changeSettings, onOffSettingsMod}: SettingsType) => {
     const [settings, setSettings] = useState({
         startValue,
-        maxValue
+        maxValue,
+        errorStartValue: false,
+        errorMaxValue: false
     })
-    const changeValueHandler = (e: ChangeEvent<HTMLInputElement>, setting:SettingType) => {
-        const newValue = +e.currentTarget.value
-        setSettings( prevState =>  ({...prevState, [setting]: newValue}))
+    const error = !settings.errorMaxValue && !settings.errorStartValue
+    const maxValueChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        const newMaxValue: number = +e.currentTarget.value
+        const errorMaxValue: boolean = newMaxValue < 1 || newMaxValue <= settings.startValue
+        setSettings(prevState =>
+            ({...prevState, maxValue: newMaxValue,
+                errorMaxValue: errorMaxValue,
+                errorStartValue:  errorMaxValue ? prevState.errorStartValue : errorMaxValue})
+        )
     }
+    const startValueChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        const newStartValue: number = +e.currentTarget.value
+        const errorStartValue: boolean = newStartValue < 0 || newStartValue >= settings.maxValue
+        setSettings(prevState =>
+            ({...prevState, startValue: newStartValue,
+                errorStartValue: errorStartValue,
+                errorMaxValue: errorStartValue ? prevState.errorMaxValue : errorStartValue})
+        )
+    }
+
     const changeCountSettingsHandler = () => {
-        if(!errorChangingSettings){
+        if(!error){
             changeSettings(settings.maxValue, settings.startValue)
-            onOffSettings(false, 'enableChangingSettings')
+            onOffSettingsMod(false)
         }
     }
-
-
-    let errorStartValue = settings.startValue < 0 ||  settings.startValue >= settings.maxValue
-    let errorMaxValue = settings.maxValue < 1 ||settings.maxValue <= settings.startValue
-
-    let enableErrorMod = errorStartValue || errorMaxValue  && !errorChangingSettings
-    let disableErrorMod = !errorStartValue && !errorMaxValue && enableChangingSettings
-
-    useEffect(() => {
-        if(enableErrorMod){
-            onOffSettings(true, 'errorChangingSettings')
-        }
-        if(disableErrorMod){
-            onOffSettings(false, 'errorChangingSettings')
-        }
-    }, [settings])
 
     useEffect(()=>{
         setSettings({...settings, startValue: startValue, maxValue: maxValue})
@@ -54,18 +52,18 @@ const SettingsThree = ({startValue, maxValue, changeSettings, enableChangingSett
     return (
         <StyledCounter>
             <Display>
-                <DisplayRow error={errorMaxValue}>
+                <DisplayRow error={settings.errorMaxValue}>
                     <span>max value</span>
-                    <input onChange={e => changeValueHandler(e, 'maxValue')} value={settings.maxValue} type='number'/>
+                    <input onChange={e => maxValueChangeHandler(e)} value={settings.maxValue} type='number'/>
                 </DisplayRow>
-                <DisplayRow error={errorStartValue}>
+                <DisplayRow error={settings.errorStartValue}>
                     <span>start value</span>
-                    <input onChange={e => changeValueHandler(e, 'startValue')} value={settings.startValue}
+                    <input onChange={e => startValueChangeHandler(e)} value={settings.startValue}
                            type="number"/>
                 </DisplayRow>
             </Display>
             <BtnWrap>
-                <Button disabled={errorChangingSettings} onClickHandler={changeCountSettingsHandler}
+                <Button disabled={!error} onClickHandler={changeCountSettingsHandler}
                         styles={'btn'}>{'set'}</Button>
             </BtnWrap>
         </StyledCounter>
