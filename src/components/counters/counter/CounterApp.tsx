@@ -44,7 +44,7 @@ const CounterApp = () => {
         localStorage.setItem('startValue', JSON.stringify(startValue))
         localStorage.setItem('maxValue', JSON.stringify(maxValue))
     }
-    const onOffSettings = (enabledSettingsMod: boolean) => {
+    const onOffSettingsMod = (enabledSettingsMod: boolean) => {
         setCounter(prevState =>({...prevState, enabledSettingsMod}))
     }
     const appErrorHandler = (appError: boolean) => {
@@ -58,7 +58,7 @@ const CounterApp = () => {
                 changeSettings={changeSettings}
                 enabledSettingsMod={counter.enabledSettingsMod}
                 appError={counter.appError}
-                onOffSettings={onOffSettings}
+                onOffSettingsMod={onOffSettingsMod}
                 appErrorHandler={appErrorHandler}
             />
             <Counter

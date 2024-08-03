@@ -9,12 +9,11 @@ type SettingsType = {
     changeSettings: (maxValue: number, startValue: number) => void
     enabledSettingsMod: boolean
     appError: boolean
-    onOffSettings: (enabledSettingsMod: boolean) => void
+    onOffSettingsMod: (enabledSettingsMod: boolean) => void
     appErrorHandler: (appErrorHandler: boolean) => void
 }
-type SettingType = 'startValue' | 'maxValue'
 
-const Settings = ({startValue, maxValue, changeSettings, enabledSettingsMod, appError, onOffSettings, appErrorHandler}: SettingsType) => {
+const Settings = ({startValue, maxValue, changeSettings, enabledSettingsMod, appError, onOffSettingsMod, appErrorHandler}: SettingsType) => {
     const [settings, setSettings] = useState({
         startValue,
         maxValue,
@@ -22,32 +21,37 @@ const Settings = ({startValue, maxValue, changeSettings, enabledSettingsMod, app
         errorMaxValue: false
     })
 
-    const changeValueHandler = (e: ChangeEvent<HTMLInputElement>, setting:SettingType) => {
-        const newValue = +e.currentTarget.value
-        setSettings(prevState =>  ({...prevState, [setting]: newValue}))
-        if(setting === 'startValue'){
-            const errorStartValue = newValue < 0 || newValue >= settings.maxValue
-            appErrorHandler(errorStartValue)
-            setSettings(prevState =>  ({...prevState, errorStartValue: errorStartValue,
-                errorMaxValue: errorStartValue ? prevState.errorMaxValue : !(settings.maxValue > newValue)}))
-            onOffSettings(newValue !== startValue || settings.maxValue !== maxValue)
-            //x(newValue, startValue, 'errorStartValue', errorStartValue)
-        }
-        if(setting === 'maxValue'){
-            const errorMaxValue = newValue < 1 || newValue <= settings.startValue
-            appErrorHandler(errorMaxValue)
-            setSettings(prevState =>  ({...prevState, errorMaxValue: errorMaxValue,
-                errorStartValue:  errorMaxValue ? prevState.errorStartValue : !(settings.startValue < newValue)}))
-            onOffSettings(newValue !== maxValue || settings.startValue !== startValue)
-        }
+    const maxValueChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        const newMaxValue: number = +e.currentTarget.value
+        const errorMaxValue: boolean = newMaxValue < 1 || newMaxValue <= settings.startValue
+        const settingsMod: boolean = newMaxValue !== maxValue || settings.startValue !== startValue
+
+        onOffSettingsMod(settingsMod)
+        appErrorHandler(errorMaxValue)
+        setSettings(prevState =>
+            ({...prevState, maxValue: newMaxValue,
+                errorMaxValue: errorMaxValue,
+        errorStartValue:  errorMaxValue ? prevState.errorStartValue : errorMaxValue})
+        )
     }
+    const startValueChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        const newStartValue: number = +e.currentTarget.value
+        const errorStartValue: boolean = newStartValue < 0 || newStartValue >= settings.maxValue
+        const settingsMod: boolean = newStartValue !== startValue || settings.maxValue !== maxValue
 
-
+        onOffSettingsMod(settingsMod)
+        appErrorHandler(errorStartValue)
+        setSettings(prevState =>
+                ({...prevState, startValue: newStartValue,
+                    errorStartValue: errorStartValue,
+                errorMaxValue: errorStartValue ? prevState.errorMaxValue : errorStartValue})
+            )
+    }
 
     const changeCountSettingsHandler = () => {
         if(!appError){
             changeSettings(settings.maxValue, settings.startValue)
-            onOffSettings(false)
+            onOffSettingsMod(false)
         }
     }
 
@@ -62,11 +66,11 @@ const Settings = ({startValue, maxValue, changeSettings, enabledSettingsMod, app
             <Display>
                 <DisplayRow error={settings.errorMaxValue}>
                     <span>max value</span>
-                    <input onChange={e => changeValueHandler(e, 'maxValue')} value={settings.maxValue} type='number'/>
+                    <input onChange={e => maxValueChangeHandler(e)} value={settings.maxValue} type='number'/>
                 </DisplayRow>
                 <DisplayRow error={settings.errorStartValue}>
                     <span>start value</span>
-                    <input onChange={e => changeValueHandler(e, 'startValue')} value={settings.startValue}
+                    <input onChange={e => startValueChangeHandler(e)} value={settings.startValue}
                            type="number"/>
                 </DisplayRow>
             </Display>
