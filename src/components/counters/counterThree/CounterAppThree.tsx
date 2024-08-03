@@ -7,8 +7,7 @@ type DataType = {
     startValue: number
     maxValue: number
     data: number
-    enableChangingSettings: boolean
-    errorChangingSettings: boolean
+    enabledSettingsMod: boolean
 }
 
 const CounterAppThree = () => {
@@ -16,9 +15,7 @@ const CounterAppThree = () => {
         startValue: 0,
         maxValue: 5,
         data: 0,
-        enableChangingSettings: false,
-        errorChangingSettings: false,
-
+        enabledSettingsMod: false
     }
     const [counter, setCounter] = useState<DataType>(counterThreeData)
 
@@ -49,20 +46,18 @@ const CounterAppThree = () => {
         localStorage.setItem('startValue3', JSON.stringify(startValue))
         localStorage.setItem('maxValue3', JSON.stringify(maxValue))
     }
-    const onOffSettings = (onOff: boolean, params: string) => {
-        setCounter(prevState => ({...prevState, [params]: onOff}))
+    const onOffSettingsMod = (enabledSettingsMod: boolean) => {
+        setCounter(prevState =>({...prevState, enabledSettingsMod}))
     }
     return (
         <Wrapper>
             {
-                counter.enableChangingSettings
+                counter.enabledSettingsMod
                     ? <SettingsThree
                         startValue={counter.startValue}
                         maxValue={counter.maxValue}
                         changeSettings={changeSettings}
-                        enableChangingSettings={counter.enableChangingSettings}
-                        errorChangingSettings={counter.errorChangingSettings}
-                        onOffSettings={onOffSettings}
+                        onOffSettingsMod={onOffSettingsMod}
                     />
                     : <CounterThree
                         counter={counter.data}
@@ -70,7 +65,7 @@ const CounterAppThree = () => {
                         maxValue={counter.maxValue}
                         setCounter={changeCounter}
                         resetCounter={resetCounter}
-                        onOffSettings={onOffSettings}
+                        onOffSettingsMod={onOffSettingsMod}
                     />
             }
         </Wrapper>
