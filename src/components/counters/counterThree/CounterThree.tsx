@@ -16,7 +16,7 @@ type CounterPropsType = {
     maxValue: number
     setCounter: () => void
     resetCounter: () => void
-    onOffSettings:(onOff: boolean, params: string) => void
+    onOffSettingsMod:(onOff: boolean) => void
 }
 
 export const CounterThree = ({
@@ -25,13 +25,13 @@ export const CounterThree = ({
                                  resetCounter,
                                  startValue,
                                  maxValue,
-                                 onOffSettings
+                                 onOffSettingsMod
                              }: CounterPropsType) => {
     const color: ColorType = counter < maxValue ? Theme.colors.primary : Theme.colors.error
     const disabledInc = counter > maxValue - 1
     const disabledReset = counter === startValue
     const onOffSettingsHandler = () => {
-        onOffSettings(true, 'enableChangingSettings')
+        onOffSettingsMod(true)
     }
 
     return (
