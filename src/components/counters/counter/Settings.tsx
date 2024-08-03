@@ -28,16 +28,17 @@ const Settings = ({startValue, maxValue, changeSettings, enabledSettingsMod, app
         if(setting === 'startValue'){
             const errorStartValue = newValue < 0 || newValue >= settings.maxValue
             appErrorHandler(errorStartValue)
-            setSettings(prevState =>  ({...prevState, errorStartValue: errorStartValue, errorMaxValue: !(maxValue > newValue)}))
-            onOffSettings(newValue !== startValue && newValue !== settings.startValue && !appError)
+            setSettings(prevState =>  ({...prevState, errorStartValue: errorStartValue,
+                errorMaxValue: errorStartValue ? prevState.errorMaxValue : !(settings.maxValue > newValue)}))
+            onOffSettings(newValue !== startValue || settings.maxValue !== maxValue)
             //x(newValue, startValue, 'errorStartValue', errorStartValue)
         }
         if(setting === 'maxValue'){
             const errorMaxValue = newValue < 1 || newValue <= settings.startValue
             appErrorHandler(errorMaxValue)
-            setSettings(prevState =>  ({...prevState, errorMaxValue: errorMaxValue, errorStartValue: !(startValue < newValue)}))
-            debugger
-            onOffSettings(newValue !== maxValue && newValue !== settings.maxValue && !appError)
+            setSettings(prevState =>  ({...prevState, errorMaxValue: errorMaxValue,
+                errorStartValue:  errorMaxValue ? prevState.errorStartValue : !(settings.startValue < newValue)}))
+            onOffSettings(newValue !== maxValue || settings.startValue !== startValue)
         }
     }
 
@@ -49,15 +50,12 @@ const Settings = ({startValue, maxValue, changeSettings, enabledSettingsMod, app
             onOffSettings(false)
         }
     }
-    useEffect(()=> {
-
-    })
 
     useEffect(()=>{
         setSettings({...settings, startValue: startValue, maxValue: maxValue})
     }, [startValue, maxValue])
 
-    const disableSet:boolean = !enabledSettingsMod || enabledSettingsMod && appError
+    const disableSet:boolean = !enabledSettingsMod || (enabledSettingsMod && appError)
 
     return (
         <StyledCounter>
