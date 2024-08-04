@@ -1,76 +1,68 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import {BtnWrap, Display, DisplayRow, StyledCounter} from "./Counter.Styled";
 import {Button} from "../../button/Button";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "../store/Store";
+import {changeMaxValueInSettingsAC, changeStartValueInSettingsAC} from "../store/Settings-counter-reducer";
+import {counterParamsChangeAC} from "../store/Counter-reducer";
 
 
-type SettingsType = {
+type SettingsPropsType = {
     startValue: number
     maxValue: number
-    changeSettings: (maxValue: number, startValue: number) => void
     enabledSettingsMod: boolean
     appError: boolean
-    onOffSettingsMod: (enabledSettingsMod: boolean) => void
-    appErrorHandler: (appErrorHandler: boolean) => void
+}
+export type SettingsType = {
+    startValueInSettings: number
+    maxValueInSettings: number
+    startValueError: boolean
+    maxValueError: boolean
 }
 
-const Settings = ({startValue, maxValue, changeSettings, enabledSettingsMod, appError, onOffSettingsMod, appErrorHandler}: SettingsType) => {
-    const [settings, setSettings] = useState({
-        startValue,
-        maxValue,
-        errorStartValue: false,
-        errorMaxValue: false
-    })
+const Settings = ({startValue, maxValue, enabledSettingsMod, appError}: SettingsPropsType) => {
+
+    const settings = useSelector<AppRootStateType, SettingsType>(state => state.settings)
+    const dispatch = useDispatch()
+
+    const {startValueInSettings, maxValueInSettings, startValueError, maxValueError} = settings
 
     const maxValueChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const newMaxValue: number = +e.currentTarget.value
-        const errorMaxValue: boolean = newMaxValue < 1 || newMaxValue <= settings.startValue
-        const settingsMod: boolean = newMaxValue !== maxValue || settings.startValue !== startValue
-
-        onOffSettingsMod(settingsMod)
-        appErrorHandler(errorMaxValue)
-        setSettings(prevState =>
-            ({...prevState, maxValue: newMaxValue,
-                errorMaxValue: errorMaxValue,
-        errorStartValue:  errorMaxValue ? prevState.errorStartValue : errorMaxValue})
-        )
+        const maxValueError: boolean = newMaxValue < 1 || newMaxValue <= startValueInSettings
+        const settingsMod: boolean = newMaxValue !== maxValue || startValueInSettings !== startValue
+        dispatch(changeMaxValueInSettingsAC(newMaxValue, maxValueError, settingsMod))
     }
     const startValueChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const newStartValue: number = +e.currentTarget.value
-        const errorStartValue: boolean = newStartValue < 0 || newStartValue >= settings.maxValue
-        const settingsMod: boolean = newStartValue !== startValue || settings.maxValue !== maxValue
-
-        onOffSettingsMod(settingsMod)
-        appErrorHandler(errorStartValue)
-        setSettings(prevState =>
-                ({...prevState, startValue: newStartValue,
-                    errorStartValue: errorStartValue,
-                errorMaxValue: errorStartValue ? prevState.errorMaxValue : errorStartValue})
-            )
+        const startValueError: boolean = (newStartValue < 0) || (newStartValue >= maxValueInSettings)
+        const settingsMod: boolean = (newStartValue !== startValue) || (maxValueInSettings !== maxValue)
+        dispatch(changeStartValueInSettingsAC(newStartValue, startValueError, settingsMod))
     }
 
     const changeCountSettingsHandler = () => {
         if(!appError){
-            changeSettings(settings.maxValue, settings.startValue)
-            onOffSettingsMod(false)
+            dispatch(counterParamsChangeAC(startValueInSettings, maxValueInSettings))
         }
     }
 
-    useEffect(()=>{
-        setSettings({...settings, startValue: startValue, maxValue: maxValue})
-    }, [startValue, maxValue])
+    // useEffect(()=>{
+    //     dispatch(changeStartValueInSettingsAC(startValue, false))
+    //     dispatch(changeStartValueInSettingsAC(maxValue, false))
+    // }, [startValue, maxValue])
 
     const disableSet:boolean = !enabledSettingsMod || (enabledSettingsMod && appError)
 
     return (
         <StyledCounter>
             <Display>
-                <DisplayRow error={settings.errorMaxValue}>
+                <DisplayRow error={maxValueError}>
                     <span>max value</span>
-                    <input onChange={e => maxValueChangeHandler(e)} value={settings.maxValue} type='number'/>
+                    <input onChange={e => maxValueChangeHandler(e)} value={maxValueInSettings} type='number'/>
                 </DisplayRow>
-                <DisplayRow error={settings.errorStartValue}>
+                <DisplayRow error={startValueError}>
                     <span>start value</span>
-                    <input onChange={e => startValueChangeHandler(e)} value={settings.startValue}
+                    <input onChange={e => startValueChangeHandler(e)} value={startValueInSettings}
                            type="number"/>
                 </DisplayRow>
             </Display>
