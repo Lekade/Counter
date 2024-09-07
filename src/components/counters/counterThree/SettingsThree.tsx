@@ -17,7 +17,7 @@ const SettingsThree = ({startValue, maxValue, changeSettings, onOffSettingsMod}:
         errorStartValue: false,
         errorMaxValue: false
     })
-    const error = !settings.errorMaxValue && !settings.errorStartValue
+    const error = settings.errorMaxValue && settings.errorStartValue
     const maxValueChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const newMaxValue: number = +e.currentTarget.value
         const errorMaxValue: boolean = newMaxValue < 1 || newMaxValue <= settings.startValue
@@ -54,16 +54,16 @@ const SettingsThree = ({startValue, maxValue, changeSettings, onOffSettingsMod}:
             <Display>
                 <DisplayRow error={settings.errorMaxValue}>
                     <span>max value</span>
-                    <input onChange={e => maxValueChangeHandler(e)} value={settings.maxValue} type='number'/>
+                    <input onChange={maxValueChangeHandler} value={settings.maxValue} type='number'/>
                 </DisplayRow>
                 <DisplayRow error={settings.errorStartValue}>
                     <span>start value</span>
-                    <input onChange={e => startValueChangeHandler(e)} value={settings.startValue}
+                    <input onChange={startValueChangeHandler} value={settings.startValue}
                            type="number"/>
                 </DisplayRow>
             </Display>
             <BtnWrap>
-                <Button disabled={!error} onClickHandler={changeCountSettingsHandler}
+                <Button disabled={error} onClickHandler={changeCountSettingsHandler}
                         styles={'btn'}>{'set'}</Button>
             </BtnWrap>
         </StyledCounter>

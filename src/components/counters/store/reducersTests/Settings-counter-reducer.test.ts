@@ -1,9 +1,9 @@
-import {SettingsType} from "../counter/Settings";
+import {SettingsType} from "../../counter/Settings";
 import {
      changeMaxValueInSettingsAC,
     changeStartValueInSettingsAC,
     SettingsCounterReducer
-} from "./Settings-counter-reducer";
+} from "../Settings-counter-reducer";
 
 let settings: SettingsType
 beforeEach(()=> {

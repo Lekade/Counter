@@ -6,7 +6,7 @@ import {Wrapper} from "../counter/Counter.Styled";
 type DataType = {
     startValue: number
     maxValue: number
-    data: number
+    counter: number
     enabledSettingsMod: boolean
 }
 
@@ -14,10 +14,10 @@ const CounterAppThree = () => {
     const counterThreeData = {
         startValue: 0,
         maxValue: 5,
-        data: 0,
+        counter: 0,
         enabledSettingsMod: false
     }
-    const [counter, setCounter] = useState<DataType>(counterThreeData)
+    const [counterApp, setCounter] = useState<DataType>(counterThreeData)
 
     useEffect(() => {
         const localStorageStartValue = localStorage.getItem('startValue3')
@@ -29,20 +29,20 @@ const CounterAppThree = () => {
                 ...prevState,
                 startValue: newStartValue,
                 maxValue: newMaxValue,
-                data: newStartValue
+                counter: newStartValue
             }))
         }
     }, [])
     const changeCounter = () => {
-        let newData = {...counter, data: ++counter.data}
+        let newData = {...counterApp, counter: ++counterApp.counter}
         setCounter(newData)
     }
     const resetCounter = () => {
-        let newData = {...counter, data: counter.startValue}
+        let newData = {...counterApp, counter: counterApp.startValue}
         setCounter(newData)
     }
     const changeSettings = (maxValue: number, startValue: number) => {
-        setCounter(prevState => ({...prevState, maxValue, startValue, data: startValue}))
+        setCounter(prevState => ({...prevState, maxValue, startValue, counter: startValue}))
         localStorage.setItem('startValue3', JSON.stringify(startValue))
         localStorage.setItem('maxValue3', JSON.stringify(maxValue))
     }
@@ -52,17 +52,17 @@ const CounterAppThree = () => {
     return (
         <Wrapper>
             {
-                counter.enabledSettingsMod
+                counterApp.enabledSettingsMod
                     ? <SettingsThree
-                        startValue={counter.startValue}
-                        maxValue={counter.maxValue}
+                        startValue={counterApp.startValue}
+                        maxValue={counterApp.maxValue}
                         changeSettings={changeSettings}
                         onOffSettingsMod={onOffSettingsMod}
                     />
                     : <CounterThree
-                        counter={counter.data}
-                        startValue={counter.startValue}
-                        maxValue={counter.maxValue}
+                        counter={counterApp.counter}
+                        startValue={counterApp.startValue}
+                        maxValue={counterApp.maxValue}
                         setCounter={changeCounter}
                         resetCounter={resetCounter}
                         onOffSettingsMod={onOffSettingsMod}

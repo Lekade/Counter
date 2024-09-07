@@ -4,7 +4,7 @@ import {ChangeMaxValueInSettingsAT, ChangeStartValueInSettingsAT} from "./Settin
 const initializationState:CounterStateType = {
     startValue : 0,
     maxValue: 5,
-    data: 0,
+    counter: 0,
     enabledSettingsMod: false,
     appError: false
 }
@@ -15,17 +15,16 @@ type CounterResetAT = ReturnType<typeof  counterResetAC>
 type ActionType = CounterParamsChangeAT | CounterChangeAT | CounterResetAT | ChangeStartValueInSettingsAT | ChangeMaxValueInSettingsAT
 
 export const CounterReducer = (state: CounterStateType = initializationState, action: ActionType) => {
-    debugger
     switch (action.type) {
         case 'COUNTER-PARAMS-CHANGE': {
             const {startValue, maxValue} = action.payload
-            return {...state, startValue, maxValue, data:startValue, enabledSettingsMod: false}
+            return {...state, startValue, maxValue, counter:startValue, enabledSettingsMod: false}
         }
         case 'COUNTER-CHANGE': {
-            return {...state, data: state.data + 1}
+            return {...state, counter: state.counter + 1}
         }
         case 'COUNTER-RESET': {
-            return {...state, data: state.startValue}
+            return {...state, counter: state.startValue}
         }
         case 'CHANGE-START-VALUE-IN-SETTINGS':{
             const appError = action.payload.error
