@@ -22,10 +22,9 @@ export type SettingsType = {
 
 const Settings = ({startValue, maxValue, enabledSettingsMod, appError}: SettingsPropsType) => {
 
-    const settings = useSelector<AppRootStateType, SettingsType>(state => state.settings)
+    const {startValueInSettings, maxValueInSettings, startValueError, maxValueError} = useSelector<AppRootStateType, SettingsType>(state => state.settings)
     const dispatch = useDispatch()
 
-    const {startValueInSettings, maxValueInSettings, startValueError, maxValueError} = settings
 
     const maxValueChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const newMaxValue: number = +e.currentTarget.value
@@ -46,11 +45,6 @@ const Settings = ({startValue, maxValue, enabledSettingsMod, appError}: Settings
         }
     }
 
-    // useEffect(()=>{
-    //     dispatch(changeStartValueInSettingsAC(startValue, false))
-    //     dispatch(changeStartValueInSettingsAC(maxValue, false))
-    // }, [startValue, maxValue])
-
     const disableSet:boolean = !enabledSettingsMod || (enabledSettingsMod && appError)
 
     return (
@@ -58,11 +52,11 @@ const Settings = ({startValue, maxValue, enabledSettingsMod, appError}: Settings
             <Display>
                 <DisplayRow error={maxValueError}>
                     <span>max value</span>
-                    <input onChange={e => maxValueChangeHandler(e)} value={maxValueInSettings} type='number'/>
+                    <input onChange={maxValueChangeHandler} value={maxValueInSettings} type='number'/>
                 </DisplayRow>
                 <DisplayRow error={startValueError}>
                     <span>start value</span>
-                    <input onChange={e => startValueChangeHandler(e)} value={startValueInSettings}
+                    <input onChange={startValueChangeHandler} value={startValueInSettings}
                            type="number"/>
                 </DisplayRow>
             </Display>
